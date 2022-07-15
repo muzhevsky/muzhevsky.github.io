@@ -23,7 +23,52 @@
         </div>
 
     <script>
-        
+        HttpGetAsync("https://muzhevsky.github.io/russian_dictionary/", GetWordsCallback);
+        var array = [];
+        var isLoaded = false;
+        var currentLetter = "a";
+
+        let CheckForLoading = setInterval(function(){
+            console.log(array);
+            if (array.length > 0){
+                isLoaded = true;
+                clearInterval(CheckForLoading);
+                GetWordsWithCurrentLetter();
+            } 
+        },100); 
+
+        function isAWord(string){
+            return (string.length > 5 && string.length < 12);
+        }
+
+        function GetWordsCallback(a){
+            string = a.slice(a.indexOf("<body>")+6, a.indexOf("</body>"));
+            array = string.split(" ");
+            array = array.filter(isAWord);
+        }
+
+        function HttpGetAsync(theUrl, callback)
+        {
+            let xmlHttp = new XMLHttpRequest();
+            xmlHttp.onreadystatechange = function() { 
+                if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+                GetWordsCallback(xmlHttp.responseText);
+            }
+            xmlHttp.open("GET", theUrl, true);
+            xmlHttp.send(null);
+        }
+
+        function GetWordsWithCurrentLetter(){
+            let container = document.getElementsByClassName("inputContainer")[0];
+            for(let i = 0; i < 20; i++){
+                let randPos = Math.random();
+                for(let j = randPos; j < array.length; j++){
+                    
+                }
+            }
+        }
+
+
     </script>
     </body>
 </html>
