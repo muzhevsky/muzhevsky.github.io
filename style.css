@@ -1,0 +1,22 @@
+
+@font-face {
+    font-family: "Roboto";
+        src: url("fonts/Roboto-Regular.ttf");
+}
+body{
+    font-family: Roboto, sans-serif;
+}
+.mainContainer{
+    display: flex;
+    justify-content: center;
+    height: 500px;
+    width: 100%;
+}
+.inputContainer{
+    padding: 20px;
+    background-color: black;
+    color: white;
+    font-size:40px;
+    width: 80%;
+    height: 80%;
+}
