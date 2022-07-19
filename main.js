@@ -3,6 +3,7 @@
     var isLoaded = false;
     var currentLetterIndex = 0;
     var rightCounter = 0;
+    const allowedSymbols = " абвгдежзийклмнопрстуфхцчшщьыъэюя";
     
     var container = document.getElementsByClassName("inputContainer")[0];
     var buttonContainer = document.getElementsByClassName("buttonsContainer")[0];
@@ -19,8 +20,8 @@
         document.addEventListener("keydown",function(e){
             if(isLoaded){
                 if(currentLetterIndex >= container.children.length-1) return;
-    
-                if(e.code == "ControlLeft" || e.code == "ShiftLeft" || e.code == "AltLeft" || e.code == "CapsLock") return;
+                
+                if(!allowedSymbols.includes(e.key)) return;
         
                 if(e.key == container.children[currentLetterIndex].innerHTML[0]){
                     container.children[currentLetterIndex].style.backgroundColor = "green";
@@ -54,6 +55,7 @@
             }
         });
     });
+
     function GenerateButtons(){
         let letters = "абвгдежзийклмнопрстуфхцчшщьыъэюя";
         letters = Array.from(letters);
@@ -117,7 +119,7 @@
                             result.push(array[j].slice(0,array[j].length));
     
                         else 
-                            result.push(array[j].slice(0,array[j].length));
+                            result.push(array[j]);
     
                         break;
                     }
