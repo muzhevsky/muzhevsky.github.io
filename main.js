@@ -1,17 +1,31 @@
+    const allowedSymbols = " абвгдежзийклмнопрстуфхцчшщьыъэюя";
+    const container = document.getElementsByClassName("inputContainer")[0];
+    const buttonContainer = document.getElementsByClassName("buttonsContainer")[0];
+    const graphicsContainer = document.getElementsByClassName("graphicsContainer")[0];
+    const statDisplaysContainer = document.getElementsByClassName("statDisplaysContainer")[0];
+    const statCPM = document.getElementsByClassName("statCPM")[0];
+    const statAccuracy = document.getElementsByClassName("statAccuracy")[0];
+    
+    const russianLetters = "абвгдежзийклмнопрстуфхцчшщьыъэюя";
 
     var array = [];
     var isLoaded = false;
     var currentLetterIndex = 0;
     var rightCounter = 0;
-    const allowedSymbols = " абвгдежзийклмнопрстуфхцчшщьыъэюя";
     
-    var container = document.getElementsByClassName("inputContainer")[0];
-    var buttonContainer = document.getElementsByClassName("buttonsContainer")[0];
-    var statCPM = document.getElementsByClassName("statCPM")[0];
-    var statAccuracy = document.getElementsByClassName("statAccuracy")[0];
-    
+    var needToRecordStats = false;
+    var lettersCounter = [];
+    var mistakesCounter = [];
+
     document.addEventListener("DOMContentLoaded", function(){
         HttpGetAsync("https://muzhevsky.github.io/russian_dictionary/", GetWordsCallback);
+        
+
+        for(let i = 0; i < russianLetters.length; i++){
+            lettersCounter.push(0);
+            mistakesCounter.push(0);
+        }
+
         GenerateButtons();
 
         let time = 0;
@@ -22,18 +36,29 @@
                 if(currentLetterIndex >= container.children.length-1) return;
                 
                 if(!allowedSymbols.includes(e.key)) return;
-        
-                if(e.key == container.children[currentLetterIndex].innerHTML[0]){
-                    container.children[currentLetterIndex].style.backgroundColor = "green";
+                
+                var currentSpan = container.children[currentLetterIndex];
+                    
+                let currentLetterPosition = GetElementNumberInArray(currentSpan.innerHTML[0],russianLetters);
+                lettersCounter[currentLetterPosition]++;
+
+                if(e.key == currentSpan.innerHTML[0]){
+                    currentSpan.style.backgroundColor = "green";
                     currentLetterIndex++;
                     rightCounter++;
+
                 }
     
                 else{
-                    container.children[currentLetterIndex].style.backgroundColor = "red";
+                    currentSpan.style.backgroundColor = "red";
                     currentLetterIndex++;
+                    mistakesCounter[currentLetterPosition]++;
                 }
                 
+                let rightNumber = lettersCounter[currentLetterPosition]-mistakesCounter[currentLetterPosition];
+                graphicsContainer.children[currentLetterPosition].children[0].style.height = String(100*rightNumber/lettersCounter[currentLetterPosition])+"%";
+                statDisplaysContainer.children[currentLetterPosition].innerHTML = rightNumber + "/" + lettersCounter[currentLetterPosition];
+
                 if (time == 0){
                     time = performance.now();
                 }
@@ -65,12 +90,19 @@
         let buttons = Array.from(document.getElementsByClassName("letterButton"));
         
         buttons.forEach(function(element){
-            console.log(element);
             element.addEventListener("click", function() {
                 let words = GetWordsWithCurrentLetter(element.textContent);
                 PushWordsIntoContainer(words);
             });
         });
+
+        for(let i = 0; i < letters.length; i++){
+            graphicsContainer.innerHTML += "<div class = 'graphicBackground'><div class = 'graphicFill'></div></div>"
+        }
+
+        for(let i = 0; i < letters.length; i++){
+            statDisplaysContainer.innerHTML += "<div class = 'statsDisplay'>0/0</div>"
+        }
     }
     function isAWord(string){
         return (string.length > 5 && string.length < 12);
@@ -140,4 +172,17 @@
             container.innerHTML+="<span> </span>";
         });
         isLoaded = true;
+    }
+
+    function GetElementNumberInArray(element, array){
+        result = 0;
+        if(!Array.isArray(array)) 
+            array = Array.from(array);
+        
+        for(result; result < array.length; result++)
+            if(array[result] == element) 
+                return result;
+        
+        result = -1;
+        return -1;
     }

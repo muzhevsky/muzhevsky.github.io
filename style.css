@@ -5,6 +5,7 @@
 }
 body{
     font-family: Roboto, sans-serif;
+    min-width: 1000px;
 }
 .mainContainer{
     display: flex;
@@ -31,5 +32,35 @@ body{
     background-color: green;
     color: white;
     line-height: 20px;
+    text-align: center;
+}
+.letterButton :hover{
+    cursor: pointer;
+}
+.graphicsContainer{
+    display: flex;
+    justify-content: center;
+}
+.graphicBackground{
+    margin: 5px;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column-reverse;
+    align-items: center;
+    width: 40px;
+    height: 200px;
+}
+.graphicFill{
+    background-color: green;
+    width: 80%;
+    height: 100%;
+}
+.statDisplaysContainer{
+    display: flex;
+    justify-content: center;
+}
+.statsDisplay{
+    margin: 5px;
+    width: 40px;
     text-align: center;
 }
